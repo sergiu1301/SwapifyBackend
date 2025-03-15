@@ -1,0 +1,15 @@
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\bin\Debug\net7.0\Swapify.Notifications.deps.json
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\bin\Debug\net7.0\Swapify.Notifications.dll
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\bin\Debug\net7.0\Swapify.Notifications.pdb
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\bin\Debug\net7.0\Swapify.Contracts.dll
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\bin\Debug\net7.0\Swapify.Contracts.pdb
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\Swapify.Notifications.csproj.AssemblyReference.cache
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\Swapify.Notifications.GeneratedMSBuildEditorConfig.editorconfig
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\Swapify.Notifications.AssemblyInfoInputs.cache
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\Swapify.Notifications.AssemblyInfo.cs
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\Swapify.Notifications.csproj.CoreCompileInputs.cache
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\Swapify..7E4F1FEF.Up2Date
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\Swapify.Notifications.dll
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\refint\Swapify.Notifications.dll
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\Swapify.Notifications.pdb
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\ref\Swapify.Notifications.dll

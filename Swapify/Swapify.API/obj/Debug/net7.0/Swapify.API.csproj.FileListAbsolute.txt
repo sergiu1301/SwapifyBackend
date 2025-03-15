@@ -1,0 +1,17 @@
+C:\University\SwapifyBackend\Swapify\Swapify.API\bin\Debug\net7.0\Swapify.API.deps.json
+C:\University\SwapifyBackend\Swapify\Swapify.API\bin\Debug\net7.0\Swapify.API.dll
+C:\University\SwapifyBackend\Swapify\Swapify.API\bin\Debug\net7.0\Swapify.API.pdb
+C:\University\SwapifyBackend\Swapify\Swapify.API\bin\Debug\net7.0\Swapify.API.xml
+C:\University\SwapifyBackend\Swapify\Swapify.API\bin\Debug\net7.0\Swapify.Contracts.dll
+C:\University\SwapifyBackend\Swapify\Swapify.API\bin\Debug\net7.0\Swapify.Contracts.pdb
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify.API.csproj.AssemblyReference.cache
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify.API.GeneratedMSBuildEditorConfig.editorconfig
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify.API.AssemblyInfoInputs.cache
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify.API.AssemblyInfo.cs
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify.API.csproj.CoreCompileInputs.cache
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify..8E73D52C.Up2Date
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify.API.dll
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\refint\Swapify.API.dll
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify.API.xml
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify.API.pdb
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\ref\Swapify.API.dll
