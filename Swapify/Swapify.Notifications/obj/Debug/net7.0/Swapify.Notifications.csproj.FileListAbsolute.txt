@@ -13,3 +13,4 @@ C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\Swap
 C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\refint\Swapify.Notifications.dll
 C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\Swapify.Notifications.pdb
 C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\ref\Swapify.Notifications.dll
+C:\University\SwapifyBackend\Swapify\Swapify.Notifications\obj\Debug\net7.0\Swapify.Notifications.sourcelink.json

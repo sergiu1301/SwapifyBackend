@@ -117,3 +117,4 @@ C:\University\SwapifyBackend\Swapify\Swapify.Host\obj\Debug\net7.0\refint\Swapif
 C:\University\SwapifyBackend\Swapify\Swapify.Host\obj\Debug\net7.0\Swapify.Host.pdb
 C:\University\SwapifyBackend\Swapify\Swapify.Host\obj\Debug\net7.0\Swapify.Host.genruntimeconfig.cache
 C:\University\SwapifyBackend\Swapify\Swapify.Host\obj\Debug\net7.0\ref\Swapify.Host.dll
+C:\University\SwapifyBackend\Swapify\Swapify.Host\obj\Debug\net7.0\Swapify.Host.sourcelink.json

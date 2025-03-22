@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Swapify.Host")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cab5b90b77589586b5899b3413feb9678d874f9b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Swapify.Host")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Swapify.Host")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -19,3 +19,4 @@ C:\University\SwapifyBackend\Swapify\Swapify.Infrastructure\obj\Debug\net7.0\ref
 C:\University\SwapifyBackend\Swapify\Swapify.Infrastructure\obj\Debug\net7.0\Swapify.Infrastructure.pdb
 C:\University\SwapifyBackend\Swapify\Swapify.Infrastructure\obj\Debug\net7.0\Swapify.Infrastructure.genruntimeconfig.cache
 C:\University\SwapifyBackend\Swapify\Swapify.Infrastructure\obj\Debug\net7.0\ref\Swapify.Infrastructure.dll
+C:\University\SwapifyBackend\Swapify\Swapify.Infrastructure\obj\Debug\net7.0\Swapify.Infrastructure.sourcelink.json

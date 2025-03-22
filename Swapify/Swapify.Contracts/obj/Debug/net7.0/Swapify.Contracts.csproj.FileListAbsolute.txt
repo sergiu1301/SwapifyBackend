@@ -10,3 +10,4 @@ C:\University\SwapifyBackend\Swapify\Swapify.Contracts\obj\Debug\net7.0\Swapify.
 C:\University\SwapifyBackend\Swapify\Swapify.Contracts\obj\Debug\net7.0\refint\Swapify.Contracts.dll
 C:\University\SwapifyBackend\Swapify\Swapify.Contracts\obj\Debug\net7.0\Swapify.Contracts.pdb
 C:\University\SwapifyBackend\Swapify\Swapify.Contracts\obj\Debug\net7.0\ref\Swapify.Contracts.dll
+C:\University\SwapifyBackend\Swapify\Swapify.Contracts\obj\Debug\net7.0\Swapify.Contracts.sourcelink.json

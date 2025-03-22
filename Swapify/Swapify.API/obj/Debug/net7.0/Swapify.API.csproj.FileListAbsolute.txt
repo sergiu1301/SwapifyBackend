@@ -15,3 +15,4 @@ C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\refint\Swapify
 C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify.API.xml
 C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify.API.pdb
 C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\ref\Swapify.API.dll
+C:\University\SwapifyBackend\Swapify\Swapify.API\obj\Debug\net7.0\Swapify.API.sourcelink.json

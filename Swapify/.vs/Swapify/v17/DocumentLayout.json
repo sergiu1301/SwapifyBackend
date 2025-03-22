@@ -138,11 +138,15 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Bookmark",
@@ -153,6 +157,18 @@
               "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Dockerfile",
@@ -160,7 +176,7 @@
               "RelativeDocumentMoniker": "Swapify.Host\\Dockerfile",
               "ToolTip": "C:\\University\\SwapifyBackend\\Swapify\\Swapify.Host\\Dockerfile",
               "RelativeToolTip": "Swapify.Host\\Dockerfile",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACAAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2025-03-15T21:50:46.773Z",
               "EditorCaption": ""
@@ -175,8 +191,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\Services\\EncryptDecryptService.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABYAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T21:02:44.966Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T21:02:44.966Z"
             },
             {
               "$type": "Document",
@@ -188,16 +203,7 @@
               "RelativeToolTip": "Swapify.API\\Controllers\\AuthController.cs",
               "ViewState": "AgIAAJgAAAAAAAAAAAAgwKgAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:11:23.346Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+              "WhenOpened": "2025-03-15T19:11:23.346Z"
             },
             {
               "$type": "Document",
@@ -209,12 +215,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\Stores\\UserStore.cs",
               "ViewState": "AgIAAOgAAAAAAAAAAAAkwPMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T20:12:33.761Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+              "WhenOpened": "2025-03-15T20:12:33.761Z"
             },
             {
               "$type": "Document",
@@ -226,8 +227,7 @@
               "RelativeToolTip": "Swapify.API\\Controllers\\AdminUserRoleController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:49:20.781Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:49:20.781Z"
             },
             {
               "$type": "Document",
@@ -239,8 +239,7 @@
               "RelativeToolTip": "Swapify.Notifications\\Services\\EmailSenderService.cs",
               "ViewState": "AgIAAAUAAAAAAAAAAAApwBAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:29:31.214Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:29:31.214Z"
             },
             {
               "$type": "Document",
@@ -252,8 +251,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\Services\\UserService.cs",
               "ViewState": "AgIAAMIAAAAAAAAAAAAowNQAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T20:12:27.555Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T20:12:27.555Z"
             },
             {
               "$type": "Document",
@@ -265,8 +263,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\ApplicationBuilderExtension.cs",
               "ViewState": "AgIAABkAAAAAAAAAAAAQwCYAAABhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:23:49.81Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:23:49.81Z"
             },
             {
               "$type": "Document",
@@ -278,8 +275,7 @@
               "RelativeToolTip": "Swapify.API\\Controllers\\UserController.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAA0AAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:49:28.134Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:49:28.134Z"
             },
             {
               "$type": "Document",
@@ -291,8 +287,7 @@
               "RelativeToolTip": "Swapify.API\\Controllers\\ApiController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:49:25.906Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:49:25.906Z"
             },
             {
               "$type": "Document",
@@ -304,8 +299,7 @@
               "RelativeToolTip": "Swapify.API\\Controllers\\AdminRoleController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T18:55:48.895Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T18:55:48.895Z"
             },
             {
               "$type": "Document",
@@ -317,8 +311,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\EntityConfigurations\\UserEntityConfiguration.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAC4AAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:23:57.962Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:23:57.962Z"
             },
             {
               "$type": "Document",
@@ -330,8 +323,7 @@
               "RelativeToolTip": "Swapify.API\\Controllers\\AdminUserController.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAAwAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:09:38.02Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:09:38.02Z"
             },
             {
               "$type": "Document",
@@ -343,8 +335,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\Transactions\\AtomicScopeFactory.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAAAQwBYAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:58:29.419Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:58:29.419Z"
             },
             {
               "$type": "Document",
@@ -356,8 +347,7 @@
               "RelativeToolTip": "Swapify.Contracts\\Services\\IUserService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T20:13:52.935Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T20:13:52.935Z"
             },
             {
               "$type": "Document",
@@ -369,8 +359,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\Migrations\\20250315200629_InsertData.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T20:06:29.253Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T20:06:29.253Z"
             },
             {
               "$type": "Document",
@@ -382,8 +371,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\ApplicationBuilder.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T20:02:00.716Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T20:02:00.716Z"
             },
             {
               "$type": "Document",
@@ -395,8 +383,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\Migrations\\20250315200245_InitialMigration.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T20:02:45.914Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T20:02:45.914Z"
             },
             {
               "$type": "Document",
@@ -408,8 +395,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\Models\\User.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T20:05:31.366Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T20:05:31.366Z"
             },
             {
               "$type": "Document",
@@ -421,8 +407,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\ApplicationDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:22:35.789Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:22:35.789Z"
             },
             {
               "$type": "Document",
@@ -434,8 +419,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\Options\\SqlServerOptions.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:58:25.778Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:58:25.778Z"
             },
             {
               "$type": "Document",
@@ -447,8 +431,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\EntityConfigurations\\UserRoleEntityConfiguration.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T20:01:52.937Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T20:01:52.937Z"
             },
             {
               "$type": "Document",
@@ -460,8 +443,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\EntityConfigurations\\RoleEntityConfiguration.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T20:01:46.719Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T20:01:46.719Z"
             },
             {
               "$type": "Document",
@@ -473,8 +455,7 @@
               "RelativeToolTip": "Swapify.Host\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-03-15T19:05:27.073Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:05:27.073Z"
             },
             {
               "$type": "Document",
@@ -486,8 +467,7 @@
               "RelativeToolTip": "Swapify.Host\\Program.cs",
               "ViewState": "AgIAADoAAAAAAAAAAAAkwE4AAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:05:23.691Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:05:23.691Z"
             },
             {
               "$type": "Document",
@@ -499,8 +479,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\Exceptions\\ErrorMessages.Designer.cs",
               "ViewState": "AgIAADAAAAAAAAAAAAAawCYAAABSAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:25:28.189Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:25:28.189Z"
             },
             {
               "$type": "Document",
@@ -512,8 +491,7 @@
               "RelativeToolTip": "Swapify.Infrastructure\\Entities\\UserEntity.cs",
               "ViewState": "AgIAAAQAAAAAAAAAAIA/wBgAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:23:29.049Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:23:29.049Z"
             },
             {
               "$type": "Document",
@@ -525,8 +503,7 @@
               "RelativeToolTip": "Swapify.API\\Utils\\RegexConstants.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:16:57.023Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:16:57.023Z"
             },
             {
               "$type": "Document",
@@ -538,8 +515,7 @@
               "RelativeToolTip": "Swapify.API\\Policies\\Roles.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:16:32.538Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:16:32.538Z"
             },
             {
               "$type": "Document",
@@ -551,8 +527,7 @@
               "RelativeToolTip": "Swapify.Host\\Middlewares\\ExceptionMiddleware.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:07:51.143Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:07:51.143Z"
             },
             {
               "$type": "Document",
@@ -564,8 +539,7 @@
               "RelativeToolTip": "Swapify.Host\\Swaggers\\ConfigureSwaggerOptions.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAAAAwB4AAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:07:32.27Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:07:32.27Z"
             },
             {
               "$type": "Document",
@@ -577,8 +551,7 @@
               "RelativeToolTip": "Swapify.Host\\Swaggers\\SwaggerExtensions.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T19:07:47.226Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T19:07:47.226Z"
             }
           ]
         }
