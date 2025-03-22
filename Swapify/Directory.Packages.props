@@ -1,0 +1,34 @@
+﻿<Project>
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageVersion Include="BCrypt.Net-Next" Version="4.0.3" />
+		<PackageVersion Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.14" />
+		<PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.14" />
+		<PackageVersion Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
+		<PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.7.0" />
+		<PackageVersion Include="Swashbuckle.AspNetCore.Filters" Version="8.0.1" />
+		<PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.7.0" />
+		<PackageVersion Include="Validation" Version="2.5.51" />
+		<PackageVersion Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="7.0.20" />
+		<PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.14" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.14" />
+		<PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+		<PackageVersion Include="Swashbuckle.AspNetCore" Version="8.0.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.14" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.14" />
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+		<PackageVersion Include="NServiceBus" Version="8.1.6" />
+		<PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+		<PackageVersion Include="SendGrid" Version="9.29.2" />
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
+		<PackageVersion Include="xunit" Version="2.4.2" />
+		<PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
+		<PackageVersion Include="coverlet.collector" Version="3.2.0" />
+	</ItemGroup>
+</Project>
