@@ -2,6 +2,5 @@
 
 public interface IContextService
 {
-    Task<string?> GetCurrentContextAsync();
     Task<string?> GetCurrentUserIdAsync();
 }

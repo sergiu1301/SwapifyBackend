@@ -120,9 +120,7 @@ public class UserController : ApiBaseController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ChangeUserPasswordAsync([FromQuery] string userId, [FromQuery] string token, [FromBody] ChangePasswordRequest request)
     {
-        string userEmail = await _contextService.GetCurrentContextAsync();
-
-        await _userManagerService.ResetPasswordAsync(userEmail, token, request.NewPassword, request.ClientId, request.ClientSecret);
+        await _userManagerService.ResetPasswordAsync(userId, token, request.NewPassword, request.ClientId, request.ClientSecret);
 
         return NoContent();
     }

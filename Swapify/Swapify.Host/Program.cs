@@ -52,7 +52,6 @@ builder.Services.InfrastructureConfigurations(connectionStrings.DefaultConnectio
 builder.Services.ApiConfigurations(
     tokenSettings.Issuer, 
     tokenSettings.Audience, 
-    swapifySettings.ApiScope, 
     swapifySettings.ApiSecret, 
     swapifySettings.ClientSecret);
 builder.Services.AddSwaggerGen();

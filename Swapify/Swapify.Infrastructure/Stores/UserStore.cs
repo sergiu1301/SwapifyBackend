@@ -75,10 +75,8 @@ public class UserStore : IUserStore
 
         ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
 
-        UserEntity? user = await context.Users.Include(x => x.UserRoles)
-            .ThenInclude(x => x.Role)
-            .ApplyFiltering(filter)
-            .FirstOrDefaultAsync();
+        UserEntity? user = await context.Users.ApplyFiltering(filter)
+                                              .FirstOrDefaultAsync();
 
         if (user == null)
         {
@@ -98,11 +96,12 @@ public class UserStore : IUserStore
         ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
 
         int startIndex = (pageNumber - 1) * pageSize;
-        string currentUserEmail = await _contextService.GetCurrentContextAsync();
+        string currentUserId = await _contextService.GetCurrentUserIdAsync();
 
-        IQueryable<UserEntity> queryable = context.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).AsQueryable();
-
-        queryable = queryable.Where(u => u.Email != currentUserEmail && u.UserName != "Removed User");
+        IQueryable<UserEntity> queryable = context.Users.AsQueryable()
+                                                        .Include(c => c.UserRoles)
+                                                        .ThenInclude(c => c.Role)
+                                                        .Where(u => u.Id != currentUserId && u.UserName != "Removed User");
 
         int numberUsers = await queryable.CountAsync();
 

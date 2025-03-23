@@ -26,18 +26,6 @@ public class ContextService: IContextService
         return userId;
     }
 
-    public async Task<string?> GetCurrentContextAsync()
-    {
-        string? userEmail = GetClaimValue(ClaimTypes.Email);
-
-        if (userEmail is null)
-        {
-            return null;
-        }
-
-        return userEmail;
-    }
-
     private string? GetClaimValue(string claim)
     {
         ClaimsPrincipal? user = _httpContextAccessor.HttpContext?.User;

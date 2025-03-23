@@ -8,12 +8,11 @@ public static class ApplicationBuilderExtension
 {
     public static IServiceCollection ApiConfigurations(
         this IServiceCollection services, 
-        string issuer, string audience, string apiScope, string apiSecret, string clientSecret)
+        string issuer, string audience, string apiSecret, string clientSecret)
     {
         Requires.NotNull(services, nameof(services));
         Requires.NotNull(issuer, nameof(issuer));
         Requires.NotNull(audience, nameof(audience));
-        Requires.NotNull(apiScope, nameof(apiScope));
         Requires.NotNull(apiSecret, nameof(apiSecret));
         Requires.NotNull(clientSecret, nameof(clientSecret));
 
@@ -26,7 +25,6 @@ public static class ApplicationBuilderExtension
 
         ApiOptions apiOptions = new()
         {
-            ApiScope = apiScope,
             ApiSecret = apiSecret,
             ClientSecret = clientSecret
         };

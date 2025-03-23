@@ -118,9 +118,10 @@ public class UserManagerService : IUserManagerService
         await _emailNotificationService.SendForgotPasswordAsync(userEntity.FirstName, userEntity.LastName, userEntity.Id, userEmail, encodedToken);
     }
 
-    public async Task ResetPasswordAsync(string userEmail, string token, string newPassword, string clientId, string clientSecret)
+    public async Task ResetPasswordAsync(string userId, string token, string newPassword, string clientId,
+        string clientSecret)
     {
-        Requires.NotNullOrEmpty(userEmail, nameof(userEmail));
+        Requires.NotNullOrEmpty(userId, nameof(userId));
         Requires.NotNullOrEmpty(token, nameof(token));
         Requires.NotNullOrEmpty(newPassword, nameof(newPassword));
         Requires.NotNullOrEmpty(clientId, nameof(clientId));
@@ -137,7 +138,7 @@ public class UserManagerService : IUserManagerService
 
         IUserFilter userFilter = new UserFilter()
         {
-            Email = userEmail
+            UserId = userId
         };
 
         string decodedToken = HttpUtility.UrlDecode(token);
