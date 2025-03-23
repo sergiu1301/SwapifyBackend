@@ -10,7 +10,6 @@ using Validation;
 using Swapify.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using System.Web;
-using Azure.Core;
 
 namespace Swapify.Infrastructure.Stores;
 

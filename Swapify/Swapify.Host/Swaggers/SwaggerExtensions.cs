@@ -18,6 +18,5 @@ public static class SwaggerExtensions
             .ToArray();
 
         return services.AddSwaggerExamplesFromAssemblies(assemblies);
-            
     }
 }

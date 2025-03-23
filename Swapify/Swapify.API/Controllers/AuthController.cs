@@ -69,11 +69,20 @@ public class AuthController : Controller
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [SwaggerRequestExample(typeof(TokenGenerationRequest), typeof(TokenGenerationRequestExample))]
-    public async Task<IActionResult> GenerateToken([FromBody] TokenGenerationRequest request)
+    public async Task<IActionResult> GenerateToken([FromForm] TokenGenerationRequest request)
     {
-        byte[] key = Encoding.UTF8.GetBytes(_apiOptions.ApiSecret);
+        if (!request.GrantType.Equals("password", StringComparison.OrdinalIgnoreCase))
+        {
+            return BadRequest(new
+            {
+                error = "unsupported_grant_type",
+                error_description = "Grant type must be 'password'."
+            });
+        }
 
         IUser user = await _userManagerService.VerifyAsync(request.Email, request.Password, request.ClientId, request.ClientSecret);
+
+        byte[] key = Encoding.UTF8.GetBytes(_apiOptions.ApiSecret);
 
         List<Claim> claims = new List<Claim>
         {
@@ -88,62 +97,88 @@ public class AuthController : Controller
             Expires = DateTime.UtcNow.Add(_tokenOptions.TokenLifeTime),
             Issuer = _tokenOptions.Issuer,
             Audience = _tokenOptions.Audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(key), 
+                SecurityAlgorithms.HmacSha256Signature
+                )
         };
 
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+        SecurityToken? securityToken = tokenHandler.CreateToken(tokenDescriptor);
+        string? accessToken = tokenHandler.WriteToken(securityToken);
 
-        SecurityToken? token = tokenHandler.CreateToken(tokenDescriptor);
-
-        return Ok(new { accessToken = tokenHandler.WriteToken(token)});
+        return Ok(new
+        {
+            access_token = accessToken,
+            token_type = "Bearer",
+            expires_in = (int)_tokenOptions.TokenLifeTime.TotalSeconds
+        });
     }
 
-    [HttpGet("swagger-login")]
-    public IActionResult SwaggerLogin([FromQuery] string client_id)
+    [HttpGet("authorize")]
+    public IActionResult ShowLoginPage(
+    [FromQuery] string response_type,
+    [FromQuery] string client_id,
+    [FromQuery] string redirect_uri,
+    [FromQuery] string state)
     {
-        var clientSecret = "dcf044f6-8251-4890-9da7-34468e37faa4";
-        string html = string.Format(@"
-        <!DOCTYPE html>
-        <html lang='en'>
-        <head>
-            <meta charset='UTF-8'>
-            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Swagger Login</title>
-        </head>
-        <body>
-            <h2>Login for Swagger</h2>
-            <form id='loginForm'>
-                <input type='email' id='email' placeholder='Email' required /><br>
-                <input type='password' id='password' placeholder='Password' required /><br>
-                <input type='hidden' id='clientId' value='{0}' />
-                <input type='hidden' id='clientSecret' value='{1}' />
-                <button type='submit'>Login</button>
-            </form>
-            <script>
-                document.getElementById('loginForm').addEventListener('submit', async function(e) {{
-                    e.preventDefault();
-                    const email = document.getElementById('email').value;
-                    const password = document.getElementById('password').value;
-                    const clientId = document.getElementById('clientId').value;
-                    const clientSecret = document.getElementById('clientSecret').value;
+        if (!string.Equals(response_type, "token", StringComparison.OrdinalIgnoreCase))
+        {
+            return BadRequest("Invalid response_type - expected 'token'");
+        }
 
-                    const response = await fetch('token', {{
-                        method: 'POST',
-                        headers: {{ 'Content-Type': 'application/json' }},
-                        body: JSON.stringify({{ email, password, clientId, clientSecret }})
-                    }});
+        string openEyeSvg = ReadFromWwwRoot("svg", "open-eye.svg");
+        string slashEyeSvg = ReadFromWwwRoot("svg", "slash-eye.svg");
+        string htmlContent = ReadFromWwwRoot("html", "authorize.html");
+        string cssContent = ReadFromWwwRoot("html", "authorize.css");
+        string jsContent = ReadFromWwwRoot("html", "authorize.js");
 
-                    const data = await response.json();
-                    if (data.token) {{
-                        window.location.href = '/swagger/oauth2-redirect.html?access_token=' + data.token;
-                    }} else {{
-                        alert('Login failed!');
-                    }}
-                }});
-            </script>
-        </body>
-        </html>", client_id, clientSecret);
+        var jsPlaceholders = new Dictionary<string, string>
+        {
+            { "{{OPEN_EYE_SVG}}",  openEyeSvg },
+            { "{{SLASH_EYE_SVG}}", slashEyeSvg },
+            { "{{CLIENT_ID}}",     client_id },
+            { "{{CLIENT_SECRET}}", _apiOptions.ClientSecret },
+            { "{{REDIRECT_URI}}",  redirect_uri },
+            { "{{STATE}}",         state ?? "" }
+        };
 
-        return Content(html, "text/html");
+        jsContent = ReplaceMultiple(jsContent, jsPlaceholders);
+
+        htmlContent = htmlContent.Replace("{{OPEN_EYE_SVG}}", openEyeSvg);
+
+        string finalHtml = htmlContent.Replace(
+            "</body>",
+            $@"
+                <style>
+                    {cssContent}
+                </style>
+                <script>
+                    {jsContent}
+                </script>
+            </body>"
+        );
+
+        return Content(finalHtml, "text/html");
+    }
+
+    private string ReadFromWwwRoot(params string[] pathSegments)
+    {
+        string fullPath = Path.Combine(
+            new[] { Directory.GetCurrentDirectory(), "wwwroot" }
+                .Concat(pathSegments)
+                .ToArray()
+        );
+
+        return System.IO.File.ReadAllText(fullPath);
+    }
+
+    private string ReplaceMultiple(string text, Dictionary<string, string> placeholders)
+    {
+        foreach (KeyValuePair<string, string> kvp in placeholders)
+        {
+            text = text.Replace(kvp.Key, kvp.Value);
+        }
+        return text;
     }
 }

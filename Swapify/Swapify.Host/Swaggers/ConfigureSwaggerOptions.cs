@@ -9,15 +9,20 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
 {
     public void Configure(SwaggerGenOptions options)
     {
-        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
         {
-            In = ParameterLocation.Header,
-            Description = "Please enter a valid token",
-            Name = "Authorization",
-            Type = SecuritySchemeType.Http,
-            BearerFormat = "JWT",
-            Scheme = "Bearer"
+            Type = SecuritySchemeType.OAuth2,
+            Description = "Swagger PKCE Flow",
+            Flows = new OpenApiOAuthFlows
+            {
+                Implicit = new OpenApiOAuthFlow
+                {
+                    AuthorizationUrl = new Uri("https://localhost:7188/connect/authorize", UriKind.Absolute),
+                    TokenUrl = new Uri("https://localhost:7188/connect/token", UriKind.Absolute)
+                }
+            }
         });
+
         options.AddSecurityRequirement(new OpenApiSecurityRequirement
         {
             {
@@ -25,13 +30,14 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
                 {
                     Reference = new OpenApiReference
                     {
-                        Type=ReferenceType.SecurityScheme,
-                        Id="Bearer"
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "oauth2"
                     }
                 },
-                Array.Empty<string>()
+                new List<string>()
             }
         });
+
         options.SwaggerDoc("v1",
             new OpenApiInfo { Title = "Swapify V1", Version = "1.0" });
 

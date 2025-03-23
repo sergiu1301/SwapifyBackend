@@ -8,23 +8,29 @@ public static class ApplicationBuilderExtension
 {
     public static IServiceCollection ApiConfigurations(
         this IServiceCollection services, 
-        IDictionary<string, string> options)
+        string issuer, string audience, string apiScope, string apiSecret, string clientSecret)
     {
         Requires.NotNull(services, nameof(services));
-        Requires.NotNull(options, nameof(options));
+        Requires.NotNull(issuer, nameof(issuer));
+        Requires.NotNull(audience, nameof(audience));
+        Requires.NotNull(apiScope, nameof(apiScope));
+        Requires.NotNull(apiSecret, nameof(apiSecret));
+        Requires.NotNull(clientSecret, nameof(clientSecret));
 
         TokenOptions tokenOptions = new()
         {
-             Issuer = options["Issuer"],
-             Audience = options["Audience"],
-             TokenLifeTime = TimeSpan.FromHours(24),
-             GoogleClientId = options["GoogleClientId"]
+             Issuer = issuer,
+             Audience = audience,
+             TokenLifeTime = TimeSpan.FromHours(24)
         };
+
         ApiOptions apiOptions = new()
         {
-            ApiScope = options["ApiScope"],
-            ApiSecret = options["ApiSecret"]
+            ApiScope = apiScope,
+            ApiSecret = apiSecret,
+            ClientSecret = clientSecret
         };
+
         services.AddSingleton(tokenOptions);
         services.AddSingleton(apiOptions);
 

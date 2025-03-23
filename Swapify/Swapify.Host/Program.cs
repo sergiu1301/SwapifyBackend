@@ -1,27 +1,32 @@
 ﻿using System.Text;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Swapify.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using Swapify.Api;
 using Swapify.Host.Swagger;
 using Swapify.Host.Middlewares;
 using Swapify.Notifications;
-using Microsoft.OpenApi.Models;
+using Swapify.Host.Settings;
+using Microsoft.Extensions.Options;
+using Swapify.Host.Swaggers;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var config = builder.Configuration;
 
+config.AddSettingsConfigurations();
+builder.Services.AddSettings();
+
+var sp = builder.Services.BuildServiceProvider();
+var tokenSettings = sp.GetRequiredService<IOptions<TokenSettings>>().Value;
+var swapifySettings = sp.GetRequiredService<IOptions<SwapifySettings>>().Value;
+var connectionStrings = sp.GetRequiredService<IOptions<ConnectionStrings>>().Value;
+
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddAuthentication(configOption =>
 {
     configOption.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -31,42 +36,29 @@ builder.Services.AddAuthentication(configOption =>
 {
     jwtBearerOption.TokenValidationParameters = new TokenValidationParameters()
     {
-        ValidIssuer = config["TokenSettings:Issuer"],
-        ValidAudience = config["TokenSettings:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["SwapifySettings:ApiSecret"]!)),
+        ValidIssuer = tokenSettings.Issuer,
+        ValidAudience = tokenSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(swapifySettings.ApiSecret)),
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true
     };
 });
-
 builder.Services.AddDbContext<ApplicationDbContext>(
-    optionsBuilder => optionsBuilder.UseSqlServer(config["ConnectionStrings:DefaultConnection"]!)
+    optionsBuilder => optionsBuilder.UseSqlServer(connectionStrings.DefaultConnection)
         .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
-
-builder.Services.InfrastructureConfigurations(config["ConnectionStrings:DefaultConnection"]!);
-//
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.OAuth2,
-        Flows = new OpenApiOAuthFlows
-        {
-            AuthorizationCode = new OpenApiOAuthFlow
-            {
-                AuthorizationUrl = new Uri("https://localhost:7188/connect/swagger-login"),
-                TokenUrl = new Uri("https://localhost:7188/connect/token")
-            }
-        }
-    });
-});
-
+builder.Services.InfrastructureConfigurations(connectionStrings.DefaultConnection);
+builder.Services.ApiConfigurations(
+    tokenSettings.Issuer, 
+    tokenSettings.Audience, 
+    swapifySettings.ApiScope, 
+    swapifySettings.ApiSecret, 
+    swapifySettings.ClientSecret);
+builder.Services.AddSwaggerGen();
 builder.Services.AddLogging();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
     builder =>
     {
@@ -75,34 +67,22 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
             .SetIsOriginAllowed((host) => true)
             .AllowCredentials();
     }));
-
 builder.Services.AddApiVersioning(o => {
     o.ReportApiVersions = true;
     o.AssumeDefaultVersionWhenUnspecified = true;
     o.DefaultApiVersion = new ApiVersion(1, 0);
     o.ApiVersionReader = new UrlSegmentApiVersionReader();
 });
-
 builder.Services.AddVersionedApiExplorer(o =>
 {
     o.GroupNameFormat = "'v'VVV";
     o.SubstituteApiVersionInUrl = true;
 });
-IDictionary<string, string> options = new Dictionary<string, string>
-{
-    { "Issuer", config["TokenSettings:Issuer"]! },
-    { "Audience", config["TokenSettings:Audience"]! },
-    { "ApiScope", config["SwapifySettings:ApiScope"]! },
-    { "ApiSecret", config["SwapifySettings:ApiSecret"]! },
-    { "GoogleClientId", config["GoogleSettings:ClientId"]! }
-};
-builder.Services.ApiConfigurations(options);
 builder.Services.NotificationConfigurations();
-
 builder.Services.AddSwaggerExampleConfigurations();
 
 var app = builder.Build();
-
+app.UseStaticFiles();
 app.UseMiddleware<ForwardedPrefixHeaderMiddleware>();
 
 if (app.Environment.IsDevelopment())
@@ -111,20 +91,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("v1/swagger.json", "Swapify V1");
+        c.OAuthClientId("swagger.pkce");
+        c.OAuthClientSecret("");
+        c.OAuthUsePkce();
     });
     app.UseRouting();
 }
 
 app.UseHttpsRedirection();
-
 app.UseCors("CorsPolicy");
-
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();
