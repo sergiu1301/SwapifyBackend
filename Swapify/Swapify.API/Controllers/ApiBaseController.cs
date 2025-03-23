@@ -10,6 +10,6 @@ namespace Swapify.API.Controllers;
 [Produces("application/json")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
-public abstract class ApiController : Controller
+public abstract class ApiBaseController : Controller
 {
 }

@@ -15,7 +15,7 @@ public static class RoleQueryableExtensions
 
         if (filter.RoleId is not null)
         {
-            query = query.Where(x => x.RoleId == filter.RoleId);
+            query = query.Where(x => x.Id == filter.RoleId);
         }
 
         if (filter.Name is not null)

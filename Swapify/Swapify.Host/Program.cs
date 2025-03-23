@@ -12,12 +12,12 @@ using Swapify.Api;
 using Swapify.Host.Swagger;
 using Swapify.Host.Middlewares;
 using Swapify.Notifications;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
 
-builder.Services.AddSignalR();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -39,37 +39,6 @@ builder.Services.AddAuthentication(configOption =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true
     };
-
-    jwtBearerOption.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
-        {
-            var accessToken = context.Request.Query["access_token"];
-
-            var path = context.HttpContext.Request.Path;
-            if (!string.IsNullOrEmpty(accessToken) &&
-                (path.StartsWithSegments("/chathub") || path.StartsWithSegments("/connecthub")))
-            {
-                context.Token = accessToken;
-            }
-            return Task.CompletedTask;
-        }
-    };
-}).AddJwtBearer(GoogleDefaults.AuthenticationScheme, options =>
-{
-    options.Authority = config["GoogleSettings:Issuer"];
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidIssuer = config["GoogleSettings:Issuer"],
-        ValidateAudience = true,
-        ValidAudience = config["GoogleSettings:ClientId"],
-        ValidateLifetime = true,
-        IssuerSigningKey =
-            new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(
-                    config["GoogleSettings:ClientSecret"]!))
-    };
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(
@@ -77,8 +46,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(
         .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
 builder.Services.InfrastructureConfigurations(config["ConnectionStrings:DefaultConnection"]!);
-
-builder.Services.AddSwaggerGen();
+//
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.OAuth2,
+        Flows = new OpenApiOAuthFlows
+        {
+            AuthorizationCode = new OpenApiOAuthFlow
+            {
+                AuthorizationUrl = new Uri("https://localhost:7188/connect/swagger-login"),
+                TokenUrl = new Uri("https://localhost:7188/connect/token")
+            }
+        }
+    });
+});
 
 builder.Services.AddLogging();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();

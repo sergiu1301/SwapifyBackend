@@ -13,11 +13,11 @@ public static class UserDetailExtensions
             FirstName = model.FirstName,
             LastName = model.LastName,
             EmailConfirmed = model.EmailConfirmed,
-            IsBlocked = model.IsBlocked,
-            UserId = model.UserId,
+            LockoutEnabled = model.IsBlocked,
+            Id = model.UserId,
             UserName = model.UserName,
             PasswordHash = model.PasswordHash,
-            Salt = model.Salt,
+            SecurityStamp = model.Salt,
         };
     }
 }

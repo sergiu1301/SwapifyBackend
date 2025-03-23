@@ -4,23 +4,31 @@ public interface IUser
 {
     string UserId { get; }
 
-    string UserName { get; }
-
     string Email { get; }
 
     string? FirstName { get; }
 
     string? LastName { get; }
 
-    bool IsBlocked { get; }
+    string? UserName { get; }
 
-    bool IsOnline { get; }
+    bool LockoutEnabled { get; }
 
-    bool IsAdmin { get; }
+    DateTimeOffset? LockoutEnd { get; }
+
+    int AccessFailedCount { get; }
 
     bool EmailConfirmed { get; }
 
-    string? RoleName { get; }
+    string RoleName { get; }
 
-    string? RoleDescription { get; }
+    string RoleDescription { get; }
+
+    DateTime CreatedAt { get; }
+
+    string CreatedBy { get; }
+
+    DateTime? UpdatedAt { get; }
+
+    string? UpdatedBy { get; }
 }

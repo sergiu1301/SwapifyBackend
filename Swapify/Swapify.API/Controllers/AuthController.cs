@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +10,6 @@ using Swapify.API.Requests;
 using Swapify.Contracts.Models;
 using Swapify.Contracts.Services;
 using Swashbuckle.AspNetCore.Filters;
-using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
 
 namespace Swapify.API.Controllers;
 
@@ -22,22 +20,39 @@ namespace Swapify.API.Controllers;
 [ApiController]
 public class AuthController : Controller
 {
-    private readonly IUserService _userService;
-    private readonly IContextService _contextService;
     private readonly ApiOptions _apiOptions;
     private readonly TokenOptions _tokenOptions;
+    private readonly IUserManagerService _userManagerService;
 
     /// <summary>
     /// Authentication Constructor
     /// </summary>
-    /// <param name="userService">User Service</param>
-    /// <param name="contextService">Context Service</param>
-    public AuthController(IUserService userService, IContextService contextService, ApiOptions apiOptions, TokenOptions tokenOptions)
+    /// <param name="apiOptions">Api options</param>
+    /// <param name="tokenOptions">Token options</param>
+    /// <param name="userManagerService">User Manager Service</param>
+    public AuthController(IUserManagerService userManagerService, ApiOptions apiOptions, TokenOptions tokenOptions)
     {
-        _userService = userService;
-        _contextService = contextService;
+        _userManagerService = userManagerService;
         _apiOptions = apiOptions;
         _tokenOptions = tokenOptions;
+    }
+
+    /// <summary>
+    /// The register endpoint can be used to register in application
+    /// </summary>
+    /// <param name="request">Register request</param>
+    /// <response code="200">Returns the token.</response>
+    /// <response code="400">Bad Request.</response>
+    /// <response code="404">Not Found.</response>
+    [HttpPost("register")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest request)
+    {
+        await _userManagerService.RegisterAsync(request.Email, request.Password, request.ClientId, request.ClientSecret);
+
+        return Ok();
     }
 
     /// <summary>
@@ -46,40 +61,28 @@ public class AuthController : Controller
     /// <param name="request">Token request</param>
     /// <response code="200">Returns the token.</response>
     /// <response code="400">Bad Request.</response>
+    /// <response code="403">Forbidden.</response>
     /// <response code="404">Not Found.</response>
     [HttpPost("token")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [SwaggerRequestExample(typeof(TokenGenerationRequest), typeof(TokenGenerationRequestExample))]
     public async Task<IActionResult> GenerateToken([FromBody] TokenGenerationRequest request)
     {
-        if (request.Scope != _apiOptions.ApiScope)
+        byte[] key = Encoding.UTF8.GetBytes(_apiOptions.ApiSecret);
+
+        IUser user = await _userManagerService.VerifyAsync(request.Email, request.Password, request.ClientId, request.ClientSecret);
+
+        List<Claim> claims = new List<Claim>
         {
-            return Unauthorized();
-        }
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-
-        var key = Encoding.UTF8.GetBytes(_apiOptions.ApiSecret);
-
-        IUser user = await _userService.GetUserAsync(request.Email, request.Password);
-        
-        if (user.IsBlocked || !user.EmailConfirmed)
-        {
-            return Forbid();
-        }
-
-        var claims = new List<Claim>
-        {
-            new("user_id", user.UserId),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Sub, user.Email),
-            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.Sub, user.UserId),
             new(ClaimTypes.Role, user.RoleName)
         };
 
-        var tokenDescriptor = new SecurityTokenDescriptor
+        SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.Add(_tokenOptions.TokenLifeTime),
@@ -88,119 +91,59 @@ public class AuthController : Controller
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var jwt = tokenHandler.WriteToken(token);
+        JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 
-        return Ok(jwt);
+        SecurityToken? token = tokenHandler.CreateToken(tokenDescriptor);
+
+        return Ok(new { accessToken = tokenHandler.WriteToken(token)});
     }
 
-    /// <summary>
-    /// The token endpoint can be used to obtain a token
-    /// </summary>
-    /// <response code="200">Returns the token.</response>
-    /// <response code="400">Bad Request.</response>
-    /// <response code="404">Not Found.</response>
-    [HttpPost("token/google")]
-    [Authorize(AuthenticationSchemes = GoogleDefaults.AuthenticationScheme)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerRequestExample(typeof(TokenGenerationRequest), typeof(TokenGenerationRequestExample))]
-    public async Task<IActionResult> GenerateTokenWithGoogleToken()
+    [HttpGet("swagger-login")]
+    public IActionResult SwaggerLogin([FromQuery] string client_id)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
+        var clientSecret = "dcf044f6-8251-4890-9da7-34468e37faa4";
+        string html = string.Format(@"
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>Swagger Login</title>
+        </head>
+        <body>
+            <h2>Login for Swagger</h2>
+            <form id='loginForm'>
+                <input type='email' id='email' placeholder='Email' required /><br>
+                <input type='password' id='password' placeholder='Password' required /><br>
+                <input type='hidden' id='clientId' value='{0}' />
+                <input type='hidden' id='clientSecret' value='{1}' />
+                <button type='submit'>Login</button>
+            </form>
+            <script>
+                document.getElementById('loginForm').addEventListener('submit', async function(e) {{
+                    e.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    const clientId = document.getElementById('clientId').value;
+                    const clientSecret = document.getElementById('clientSecret').value;
 
-        var key = Encoding.UTF8.GetBytes(_apiOptions.ApiSecret);
+                    const response = await fetch('token', {{
+                        method: 'POST',
+                        headers: {{ 'Content-Type': 'application/json' }},
+                        body: JSON.stringify({{ email, password, clientId, clientSecret }})
+                    }});
 
-        var userEmail = await _contextService.GetCurrentContextAsync();
+                    const data = await response.json();
+                    if (data.token) {{
+                        window.location.href = '/swagger/oauth2-redirect.html?access_token=' + data.token;
+                    }} else {{
+                        alert('Login failed!');
+                    }}
+                }});
+            </script>
+        </body>
+        </html>", client_id, clientSecret);
 
-        IUser? user = await _userService.GetUserAsync(userEmail);
-
-        if (user == null)
-        {
-            var firstName = await _contextService.GetCurrentGoogleFirstNameAsync();
-            var lastName = await _contextService.GetCurrentGoogleLastNameAsync();
-            user = await _userService.CreateGoogleUserAsync(userEmail, firstName, lastName);
-        }
-        else
-        {
-            if (user.IsBlocked || !user.EmailConfirmed)
-            {
-                return Forbid();
-            }
-        }
-
-        var claims = new List<Claim>
-        {
-            new("user_id", user.UserId),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Sub, user.Email),
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new(ClaimTypes.Role, user.RoleName)
-        };
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.Add(_tokenOptions.TokenLifeTime),
-            Issuer = _tokenOptions.Issuer,
-            Audience = _tokenOptions.Audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var jwt = tokenHandler.WriteToken(token);
-
-        return Ok(jwt);
-    }
-
-    /// <summary>
-    /// The register endpoint can be used for a user to register
-    /// </summary>
-    /// <param name="request">Register request</param>
-    /// <response code="200">Returns the token.</response>
-    /// <response code="400">Bad Request.</response>
-    [HttpPost("register")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerRequestExample(typeof(RegisterRequest), typeof(RegisterRequestExample))]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
-    {
-        if (request.Scope != _apiOptions.ApiScope)
-        {
-            return Unauthorized();
-        }
-
-        IUser user = await _userService.CreateUserAsync(request.Email, request.Password, request.FirstName, request.LastName);
-
-        return Ok(user);
-    }
-
-    /// <summary>
-    /// The verify token endpoint can be used to verify a token
-    /// </summary>
-    /// <response code="200">Returns the token.</response>
-    /// <response code="400">Bad Request.</response>
-    [HttpPost("token/validate")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> VerifyToken()
-    {
-        try
-        {
-            var userEmail = await _contextService.GetCurrentContextAsync();
-            bool exists = await _userService.ExistsUserAsync(userEmail);
-            
-            if (!exists)
-            {
-                return NotFound();
-            }
-            
-            return Ok();
-        }
-        catch (SecurityTokenValidationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Content(html, "text/html");
     }
 }

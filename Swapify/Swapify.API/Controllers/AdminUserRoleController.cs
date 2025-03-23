@@ -13,7 +13,7 @@ namespace Swapify.API.Controllers;
 [Route("api/v{version:apiVersion}/admin/users")]
 [Authorize(Policy = Policies.Policies.AdminPolicy)]
 [ApiVersion("1.0")]
-public class AdminUserRolesController : ApiController
+public class AdminUserRolesController : ApiBaseController
 {
     private readonly IUserRoleService _userRoleService;
 

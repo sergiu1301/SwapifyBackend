@@ -11,9 +11,8 @@ public class RegisterRequestExample : IExamplesProvider<RegisterRequest>
         {
             Email = "sergiusuciu2002@gmail.com",
             Password = "PasswordExample0!",
-            FirstName = "Example",
-            LastName = "Example",
-            Scope = "application_scope"
+            ClientId = "swagger.pkce",
+            ClientSecret = "dcf044f6-8251-4890-9da7-34468e37faa4"
         };
     }
 }

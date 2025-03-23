@@ -138,4 +138,25 @@
   <data name="UserNotFound" xml:space="preserve">
     <value>User not found.</value>
   </data>
+  <data name="ClientNotSupported" xml:space="preserve">
+    <value>The client is not supported.</value>
+  </data>
+  <data name="UserCannotBeCreated" xml:space="preserve">
+    <value>The user cannot be created.</value>
+  </data>
+  <data name="EmailCannotBeConfirmed" xml:space="preserve">
+    <value>The provided email cannot be confirmed.</value>
+  </data>
+  <data name="EmailAlreadyConfirmed" xml:space="preserve">
+    <value>The provided email is already confirmed.</value>
+  </data>
+  <data name="EmailNotConfirmed" xml:space="preserve">
+    <value>The email of the user is not confirmed</value>
+  </data>
+  <data name="UserCannotBeDeleted" xml:space="preserve">
+    <value>The user cannot be removed.</value>
+  </data>
+  <data name="PasswordCannotBeChanged" xml:space="preserve">
+    <value>The password cannot be changed.</value>
+  </data>
 </root>

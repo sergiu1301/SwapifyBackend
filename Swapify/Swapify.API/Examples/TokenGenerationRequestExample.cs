@@ -11,7 +11,6 @@ public class TokenGenerationRequestExample : IExamplesProvider<TokenGenerationRe
         {
             Email = "sergiusuciu2002@gmail.com",
             Password = "PasswordExample0!",
-            Scope = "application_scope"
         };
     }
 }

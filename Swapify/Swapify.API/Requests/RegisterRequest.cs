@@ -14,10 +14,11 @@ public class RegisterRequest
     [RegularExpression(RegexConstants.PasswordRegex, ErrorMessage = ErrorMessageConstants.PasswordDoesNotContainRequiredCharactersMessage)]
     public string Password { get; set; }
 
-    public string? FirstName { get; set; }
-
-    public string? LastName { get; set; }
+    [Required]
+    [MaxLength(100)]
+    public string ClientId { get; set; }
 
     [Required]
-    public string Scope { get; set; }
+    [MaxLength(256)]
+    public string ClientSecret { get; set; }
 }

@@ -61,11 +61,56 @@ namespace Swapify.Infrastructure.Exceptions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The client is not supported..
+        /// </summary>
+        internal static string ClientNotSupported {
+            get {
+                return ResourceManager.GetString("ClientNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided email is already confirmed..
+        /// </summary>
+        internal static string EmailAlreadyConfirmed {
+            get {
+                return ResourceManager.GetString("EmailAlreadyConfirmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided email cannot be confirmed..
+        /// </summary>
+        internal static string EmailCannotBeConfirmed {
+            get {
+                return ResourceManager.GetString("EmailCannotBeConfirmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The email of the user is not confirmed.
+        /// </summary>
+        internal static string EmailNotConfirmed {
+            get {
+                return ResourceManager.GetString("EmailNotConfirmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The email was not sent..
         /// </summary>
         internal static string EmailWasNotSent {
             get {
                 return ResourceManager.GetString("EmailWasNotSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The password cannot be changed..
+        /// </summary>
+        internal static string PasswordCannotBeChanged {
+            get {
+                return ResourceManager.GetString("PasswordCannotBeChanged", resourceCulture);
             }
         }
         
@@ -102,6 +147,24 @@ namespace Swapify.Infrastructure.Exceptions {
         internal static string UserAlreadyExists {
             get {
                 return ResourceManager.GetString("UserAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user cannot be created..
+        /// </summary>
+        internal static string UserCannotBeCreated {
+            get {
+                return ResourceManager.GetString("UserCannotBeCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user cannot be removed..
+        /// </summary>
+        internal static string UserCannotBeDeleted {
+            get {
+                return ResourceManager.GetString("UserCannotBeDeleted", resourceCulture);
             }
         }
         

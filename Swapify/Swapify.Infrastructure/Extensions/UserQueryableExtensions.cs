@@ -15,7 +15,7 @@ public static class UserQueryableExtensions
 
         if (filter.UserId is not null)
         {
-            query = query.Where(x => x.UserId == filter.UserId);
+            query = query.Where(x => x.Id == filter.UserId);
         }
 
         if (filter.Email is not null)

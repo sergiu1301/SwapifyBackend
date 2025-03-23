@@ -8,41 +8,46 @@ using Swapify.Infrastructure.Entities;
 using Swapify.Infrastructure.Exceptions;
 using Validation;
 using Swapify.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Identity;
+using System.Web;
+using Azure.Core;
 
 namespace Swapify.Infrastructure.Stores;
 
 public class UserStore : IUserStore
 {
     private readonly IContextService _contextService;
+    private readonly UserManager<UserEntity> _userManager;
 
-    public UserStore(IContextService contextService)
+    public UserStore(IContextService contextService, UserManager<UserEntity> userManager)
     {
         _contextService = contextService;
+        _userManager = userManager;
     }
 
-    public async Task DeleteAsync(string userId, IAtomicScope atomicScope)
+    public async Task DeleteAsync(IUserFilter filter, IAtomicScope atomicScope)
     {
-        Requires.NotNull(userId, nameof(userId));
+        Requires.NotNull(filter, nameof(filter));
         Requires.NotNull(atomicScope, nameof(atomicScope));
 
         ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
 
         UserEntity? user = await context.Users.Include(x => x.UserRoles)
-                                        .FirstOrDefaultAsync(u => u.UserId == userId);
+                                              .ApplyFiltering(filter)
+                                              .FirstOrDefaultAsync();
 
         if (user == null)
         {
             throw new UserNotFoundException();
         }
 
-        user.Email = Guid.NewGuid() + "@gmail.com";
-        user.UserName = "Removed User";
+        IdentityResult result = await _userManager.DeleteAsync(user);
 
-        context.Users.Update(user);
-        await context.SaveChangesAsync();
+        if (!result.Succeeded)
+            throw new UserCannotBeDeletedException();
     }
 
-    public async Task<IUser?> GetAsync(IUserFilter filter, IAtomicScope atomicScope)
+    public async Task<IUser> GetAsync(IUserFilter filter, IAtomicScope atomicScope)
     {
         Requires.NotNull(filter, nameof(filter));
         Requires.NotNull(atomicScope, nameof(atomicScope));
@@ -56,54 +61,35 @@ public class UserStore : IUserStore
 
         if (user == null)
         {
-            return null;
-        }
-
-        return user!.ToModel();
-    }
-
-    public async Task<IUser> GetAsync(string userEmail, string passwordHash, IAtomicScope atomicScope)
-    {
-        Requires.NotNull(userEmail, nameof(userEmail));
-        Requires.NotNull(passwordHash, nameof(passwordHash));
-        Requires.NotNull(atomicScope, nameof(atomicScope));
-
-        ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
-
-        UserEntity? user = await context.Users.Include(x => x.UserRoles)
-                                              .ThenInclude(x => x.Role)
-                                              .FirstOrDefaultAsync(u => u.Email == userEmail && u.PasswordHash == passwordHash);
-
-        if (user == null)
-        {
-            throw new UserNameOrPasswordNotFoundException();
+            throw new UserNotFoundException();
         }
 
         return user.ToModel();
     }
 
-    public async Task ChangeUserPasswordAsync(string userId, string passwordHash, string salt,
-        IAtomicScope atomicScope)
+    public async Task ResetPasswordAsync(IUserFilter filter, string token, string newPassword, IAtomicScope atomicScope)
     {
-        Requires.NotNull(userId, nameof(userId));
-        Requires.NotNull(passwordHash, nameof(passwordHash));
+        Requires.NotNull(filter, nameof(filter));
+        Requires.NotNull(token, nameof(token));
+        Requires.NotNull(newPassword, nameof(newPassword));
         Requires.NotNull(atomicScope, nameof(atomicScope));
 
         ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
 
         UserEntity? user = await context.Users.Include(x => x.UserRoles)
-                                              .ThenInclude(x => x.Role)
-                                              .FirstOrDefaultAsync(u => u.UserId == userId);
+            .ThenInclude(x => x.Role)
+            .ApplyFiltering(filter)
+            .FirstOrDefaultAsync();
 
         if (user == null)
         {
-            throw new UserNameOrPasswordNotFoundException();
+            throw new UserNotFoundException();
         }
 
-        user.PasswordHash = passwordHash;
-        user.Salt = salt;
-        context.Users.Update(user);
-        await context.SaveChangesAsync();
+        IdentityResult result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+        if (!result.Succeeded)
+            throw new PasswordCannotBeChangedException();
     }
 
     public async Task<(int, IReadOnlyList<IUser>)> GetManyAsync(int pageNumber, int pageSize, IAtomicScope atomicScope, string? query = null)
@@ -123,7 +109,7 @@ public class UserStore : IUserStore
 
         if (!string.IsNullOrEmpty(query))
         {
-            queryable = queryable.Where(u => u.UserId.Contains(query) || u.UserName.Contains(query) || u.Email.Contains(query));
+            queryable = queryable.Where(u => u.Id.Contains(query) || u.UserName.Contains(query) || u.Email.Contains(query));
             numberUsers = await queryable.CountAsync();
         }
 
@@ -136,193 +122,109 @@ public class UserStore : IUserStore
         return (numberUsers, usersList);
     }
 
-    public async Task<string> GetUserSaltAsync(string userEmail, IAtomicScope atomicScope)
+    public async Task<IUser> BlockUserAsync(IUserFilter filter, IAtomicScope atomicScope)
     {
-        Requires.NotNull(userEmail, nameof(userEmail));
-        Requires.NotNull(atomicScope, nameof(atomicScope));
-
-        ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
-
-        UserEntity? user = await context.Users.Include(x => x.UserRoles)
-                                              .FirstOrDefaultAsync(u => u.Email == userEmail);
-
-        if (user == null)
-        {
-            throw new UserNotFoundException();
-        }
-
-        return user.Salt;
-    }
-
-    public async Task ConfirmUserEmailAsync(string userId, IAtomicScope atomicScope)
-    {
-        Requires.NotNull(userId, nameof(userId));
-        Requires.NotNull(atomicScope, nameof(atomicScope));
-
-        ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
-
-        UserEntity? user = await context.Users.Include(x => x.UserRoles)
-                                              .FirstOrDefaultAsync(u => u.UserId == userId);
-
-        if (user == null)
-        {
-            throw new UserNotFoundException();
-        }
-
-        user.EmailConfirmed = true;
-
-        context.Users.Update(user);
-        await context.SaveChangesAsync();
-    }
-
-    public async Task<IUser> BlockUserAsync(string userId, IAtomicScope atomicScope)
-    {
-        Requires.NotNull(userId, nameof(userId));
+        Requires.NotNull(filter, nameof(filter));
         Requires.NotNull(atomicScope, nameof(atomicScope));
 
         ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
 
         UserEntity? user = await context.Users.Include(x => x.UserRoles)
                                               .ThenInclude(x => x.Role)
-                                              .FirstOrDefaultAsync(u => u.UserId == userId);
+                                              .ApplyFiltering(filter)
+                                              .FirstOrDefaultAsync();
 
         if (user == null)
         {
             throw new UserNotFoundException();
         }
 
-        user.IsBlocked = true;
-
-        context.Users.Update(user);
-        await context.SaveChangesAsync();
+        await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+        await _userManager.UpdateAsync(user);
 
         return user.ToModel();
     }
 
-    public async Task<IUser> UnblockUserAsync(string userId, IAtomicScope atomicScope)
+    public async Task<IUser> UnblockUserAsync(IUserFilter filter, IAtomicScope atomicScope)
     {
-        Requires.NotNull(userId, nameof(userId));
+        Requires.NotNull(filter, nameof(filter));
         Requires.NotNull(atomicScope, nameof(atomicScope));
 
         ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
 
         UserEntity? user = await context.Users.Include(x => x.UserRoles)
             .ThenInclude(x => x.Role)
-            .FirstOrDefaultAsync(u => u.UserId == userId);
+            .ApplyFiltering(filter)
+            .FirstOrDefaultAsync();
 
         if (user == null)
         {
             throw new UserNotFoundException();
         }
 
-        user.IsBlocked = false;
-
-        context.Users.Update(user);
-        await context.SaveChangesAsync();
+        await _userManager.SetLockoutEndDateAsync(user, null);
+        await _userManager.ResetAccessFailedCountAsync(user);
+        await _userManager.UpdateAsync(user);
 
         return user.ToModel();
     }
 
-    public async Task<bool> ExistsAsync(string userEmail, IAtomicScope atomicScope)
+    public async Task ConfirmEmailAsync(IUserFilter filter, string token, IAtomicScope atomicScope)
     {
-        Requires.NotNull(userEmail, nameof(userEmail));
+        ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
+
+        UserEntity? user = await context.Users.Include(x => x.UserRoles)
+                                              .ThenInclude(x => x.Role)
+                                              .ApplyFiltering(filter)
+                                              .FirstOrDefaultAsync();
+
+        if (user == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        if (user.EmailConfirmed)
+        {
+            throw new EmailAlreadyConfirmedException();
+        }
+
+        string decodedToken = HttpUtility.UrlDecode(token);
+
+        IdentityResult result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+
+        if (!result.Succeeded)
+        {
+            throw new EmailCannotBeConfirmedException();
+        }
+    }
+
+    public async Task<IUser> CheckPasswordAsync(IUserFilter filter, string userPassword, IAtomicScope atomicScope)
+    {
+        Requires.NotNull(filter, nameof(filter));
         Requires.NotNull(atomicScope, nameof(atomicScope));
 
         ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
 
-        bool userExists = await context.Users.Where(u => u.Email == userEmail)
-                                             .AnyAsync();
-        return userExists;
-    }
+        UserEntity? user = await context.Users.Include(x => x.UserRoles)
+            .ThenInclude(x => x.Role)
+            .ApplyFiltering(filter)
+            .FirstOrDefaultAsync();
 
-    public async Task<IUser> CreateAsync(IUserDetail userDetail, IAtomicScope atomicScope)
-    {
-        Requires.NotNull(userDetail, nameof(userDetail));
-        Requires.NotNull(atomicScope, nameof(atomicScope));
-
-        ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
-
-        UserEntity user = userDetail.ToEntity();
-
-        bool userExists = await context.Users.Where(u => u.Email == user.Email)
-                                             .AnyAsync();
-
-        if (userExists)
+        if (user == null)
         {
-            throw new UserAlreadyExistsException();
+            throw new UserNotFoundException();
         }
 
-        context.Users.Add(user);
-        await context.SaveChangesAsync();
+        if (!await _userManager.CheckPasswordAsync(user, userPassword))
+        {
+            throw new UserNameOrPasswordNotFoundException();
+        }
+
+        if (!user.EmailConfirmed)
+        {
+            throw new EmailNotConfirmedException();
+        }
 
         return user.ToModel();
-    }
-
-    public async Task<IUser> ChangeUserNameAsync(string userId, string userName, string? firstName,
-        string? lastName, IAtomicScope atomicScope)
-    {
-        Requires.NotNull(userId, nameof(userId));
-        Requires.NotNull(userName, nameof(userName));
-        
-        ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
-
-        UserEntity? user = await context.Users.Include(x => x.UserRoles)
-            .ThenInclude(x => x.Role)
-            .FirstOrDefaultAsync(u => u.UserId == userId);
-
-        if (user == null)
-        {
-            throw new UserNotFoundException();
-        }
-
-        user.UserName = userName;
-        user.FirstName = firstName;
-        user.LastName = lastName;
-        context.Users.Update(user);
-        await context.SaveChangesAsync();
-
-        return user.ToModel();
-    }
-
-    public async Task ActiveUserAsync(string userId, IAtomicScope atomicScope)
-    {
-        Requires.NotNull(userId, nameof(userId));
-
-        ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
-
-        UserEntity? user = await context.Users.Include(x => x.UserRoles)
-            .ThenInclude(x => x.Role)
-            .FirstOrDefaultAsync(u => u.UserId == userId);
-
-        if (user == null)
-        {
-            throw new UserNotFoundException();
-        }
-
-        user.IsOnline = true;
-
-        context.Users.Update(user);
-        await context.SaveChangesAsync();
-    }
-
-    public async Task InactiveUserAsync(string userId, IAtomicScope atomicScope)
-    {
-        Requires.NotNull(userId, nameof(userId));
-
-        ApplicationDbContext context = await atomicScope.ToDbContextAsync<ApplicationDbContext>(options => new ApplicationDbContext(options));
-
-        UserEntity? user = await context.Users.Include(x => x.UserRoles)
-            .ThenInclude(x => x.Role)
-            .FirstOrDefaultAsync(u => u.UserId == userId);
-
-        if (user == null)
-        {
-            throw new UserNotFoundException();
-        }
-
-        user.IsOnline = false;
-
-        context.Users.Update(user);
-        await context.SaveChangesAsync();
     }
 }

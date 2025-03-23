@@ -14,7 +14,7 @@ namespace Swapify.API.Controllers;
 [Route("api/v{version:apiVersion}/admin/roles")]
 [Authorize(Policy = Policies.Policies.UserOrAdminPolicy)]
 [ApiVersion("1.0")]
-public class AdminRoleController : ApiController
+public class AdminRoleController : ApiBaseController
 {
     private readonly IRoleService _roleService;
 

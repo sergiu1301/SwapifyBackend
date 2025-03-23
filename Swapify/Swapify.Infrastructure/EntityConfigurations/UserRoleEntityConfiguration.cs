@@ -10,22 +10,24 @@ internal class UserRoleEntityConfiguration : IEntityTypeConfiguration<UserRoleEn
     {
         builder.ToTable("UserRoles");
 
-        builder.HasKey(ur => new { ur.UserId, ur.RoleId });
-
         builder.HasIndex(ur => new { ur.UserId })
             .IsUnique();
 
         builder.HasIndex(ur => new { ur.UserId, ur.RoleId })
             .IsUnique();
 
-        builder.HasOne(ur => ur.User)
-            .WithMany(u => u.UserRoles)
-            .HasForeignKey(ur => ur.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(ur => ur.CreatedAt)
+            .IsRequired()
+            .HasDefaultValueSql("GETUTCDATE()");
 
-        builder.HasOne(ur => ur.Role)
-            .WithMany(r => r.UserRoles)
-            .HasForeignKey(ur => ur.RoleId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(ur => ur.UpdatedAt)
+            .IsRequired(false);
+
+        builder.Property(ur => ur.CreatedBy)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(ur => ur.UpdatedBy)
+            .HasMaxLength(100);
     }
 }

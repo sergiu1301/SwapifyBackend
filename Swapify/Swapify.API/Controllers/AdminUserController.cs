@@ -12,17 +12,17 @@ namespace Swapify.API.Controllers;
 /// </summary>
 [Route("api/v{version:apiVersion}/admin/users")]
 [ApiVersion("1.0")]
-public class AdminUserController : ApiController
+public class AdminUserController : ApiBaseController
 {
-    private readonly IUserService _userService;
+    private readonly IUserManagerService _userManagerService;
 
     /// <summary>
     /// Admin User Constructor
     /// </summary>
-    /// <param name="userService">User Service</param>
-    public AdminUserController(IUserService userService)
+    /// <param name="userManagerService">User Manager Service</param>
+    public AdminUserController(IUserManagerService userManagerService)
     {
-        _userService = userService;
+        _userManagerService = userManagerService;
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class AdminUserController : ApiController
     [Authorize(Policy = Policies.Policies.AdminPolicy)]
     public async Task<IActionResult> DeleteUserAsync([FromRoute][Required][StringLength(36)] string userId)
     {
-        await _userService.DeleteUserAsync(userId);
+        await _userManagerService.DeleteAsync(userId);
 
         return NoContent();
     }
@@ -66,18 +66,13 @@ public class AdminUserController : ApiController
     [Authorize(Policy = Policies.Policies.AdminPolicy)]
     public async Task<IActionResult> GetUserAsync([FromRoute][Required][StringLength(36)] string userEmail)
     {
-        IUser user = await _userService.GetUserAsync(userEmail);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
+        IUser user = await _userManagerService.GetByEmailAsync(userEmail);
 
         return Ok(user);
     }
 
     /// <summary>
-    /// Block a user
+    /// Block or unblock a user
     /// </summary>
     /// <param name="userId">User identifier</param>
     /// <response code="204">No Content.</response>
@@ -96,11 +91,11 @@ public class AdminUserController : ApiController
     {
         if (blocked)
         {
-            await _userService.BlockUserAsync(userId);
+            await _userManagerService.BlockAsync(userId);
         }
         else
         {
-            await _userService.UnblockUserAsync(userId);
+            await _userManagerService.UnblockAsync(userId);
         }
 
         return NoContent();
@@ -123,7 +118,7 @@ public class AdminUserController : ApiController
     [Authorize(Policy = Policies.Policies.UserOrAdminPolicy)]
     public async Task<IActionResult> GetUsersAsync([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromBody] string? query = null)
     {
-        (int, IReadOnlyList<IUser>) users = await _userService.GetUsersAsync(pageNumber, pageSize, query);
+        (int, IReadOnlyList<IUser>) users = await _userManagerService.GetManyAsync(pageNumber, pageSize, query);
 
         return Ok(new {
             NoUsers = users.Item1, Users =  users.Item2

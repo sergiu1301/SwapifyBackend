@@ -21,7 +21,7 @@ public class UserRoleStore : IUserRoleStore
 
         UserEntity? user = context.Users.Include(x => x.UserRoles)
                                         .ThenInclude(x => x.Role)
-                                        .FirstOrDefault(u => u.UserId == userId);
+                                        .FirstOrDefault(u => u.Id == userId);
 
         if (user == null)
         {
@@ -49,7 +49,7 @@ public class UserRoleStore : IUserRoleStore
 
         UserEntity? user = await context.Users.Include(x => x.UserRoles)
                                         .ThenInclude(x => x.Role)
-                                        .SingleOrDefaultAsync(u => u.UserId == userId);
+                                        .SingleOrDefaultAsync(u => u.Id == userId);
 
         if (user == null)
         {
@@ -70,7 +70,7 @@ public class UserRoleStore : IUserRoleStore
         UserRoleEntity newUserRole = new()
         {
             UserId = userId,
-            RoleId = role.RoleId
+            RoleId = role.Id
         };
 
         await context.UserRoles.AddAsync(newUserRole);
@@ -86,7 +86,7 @@ public class UserRoleStore : IUserRoleStore
 
         UserEntity? user = await context.Users.Include(u => u.UserRoles)
                                               .ThenInclude(u => u.Role)
-                                              .Where(u => u.UserId == userId)
+                                              .Where(u => u.Id == userId)
                                               .SingleOrDefaultAsync();
 
         if (user == null)

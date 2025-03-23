@@ -10,7 +10,7 @@ public static class RoleExtensions
     {
         return new Role()
         {
-            RoleId = model.RoleId,
+            RoleId = model.Id,
             Name = model.Name,
             Description = model.Description
         };
@@ -20,7 +20,7 @@ public static class RoleExtensions
     {
         return new RoleEntity()
         {
-            RoleId = entity.RoleId,
+            Id = entity.RoleId,
             Name = entity.Name,
             Description = entity.Description
         };

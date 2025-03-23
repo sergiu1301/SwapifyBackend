@@ -10,17 +10,18 @@ public static class UserExtensions
     {
         return new User()
         {
-            Email = model.Email,
+            UserId = model.Id,
+            Email = model.Email!,
             FirstName = model.FirstName,
             LastName = model.LastName,
             EmailConfirmed = model.EmailConfirmed,
-            IsBlocked = model.IsBlocked,
-            IsOnline = model.IsOnline,
-            IsAdmin = model.IsAdmin,
-            UserId = model.UserId,
-            UserName = model.UserName,
-            RoleName = model.UserRoles != null ? model.UserRoles.Select(ur => ur.Role.Name).FirstOrDefault() : null,
-            RoleDescription = model.UserRoles != null ? model.UserRoles.Select(ur => ur.Role.Description).FirstOrDefault() : null
+            LockoutEnabled = model.LockoutEnabled,
+            RoleName = model.UserRoles.Select(ur => ur.Role.Name).FirstOrDefault()!,
+            RoleDescription = model.UserRoles.Select(ur => ur.Role.Description).FirstOrDefault()!,
+            UpdatedBy = model.UpdatedBy,
+            UpdatedAt = model.UpdatedAt,
+            CreatedBy = model.CreatedBy,
+            CreatedAt = model.CreatedAt
         };
     }
 }

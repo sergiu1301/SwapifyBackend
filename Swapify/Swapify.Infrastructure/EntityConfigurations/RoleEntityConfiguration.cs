@@ -10,25 +10,26 @@ internal class RoleEntityConfiguration : IEntityTypeConfiguration<RoleEntity>
     {
         builder.ToTable("Roles");
 
-        builder.HasKey(r => r.RoleId);
-
-        builder.HasIndex(ur => ur.RoleId )
-            .IsUnique();
-
-        builder.Property(ur => ur.RoleId)
-            .HasMaxLength(36);
-
-        builder.Property(ur => ur.Name)
-            .HasMaxLength(256);
-
-        builder.HasIndex(ur => ur.Name)
-            .IsUnique();
-
         builder.Property(ur => ur.Description)
             .HasMaxLength(256);
 
+        builder.Property(u => u.CreatedAt)
+            .IsRequired()
+            .HasDefaultValueSql("GETUTCDATE()");
+
+        builder.Property(u => u.UpdatedAt)
+            .IsRequired(false);
+
+        builder.Property(u => u.CreatedBy)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(u => u.UpdatedBy)
+            .HasMaxLength(100);
+
         builder.HasMany(r => r.UserRoles)
             .WithOne(ur => ur.Role)
-            .HasForeignKey(ur => ur.RoleId);
+            .HasForeignKey(ur => ur.RoleId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

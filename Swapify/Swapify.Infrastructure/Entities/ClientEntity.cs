@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Swapify.Infrastructure.Entities;
 
-public class RoleEntity: IdentityRole, IAuditable
+public class ClientEntity : IAuditable
 {
-    public string Description { get; set; } = string.Empty;
+    public int Id { get; set; }
 
-    public virtual ICollection<UserRoleEntity> UserRoles { get; set; }
+    public string ClientId { get; set; } = string.Empty;
+
+    public string ClientSecretHash { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

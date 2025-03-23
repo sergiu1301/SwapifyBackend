@@ -14,9 +14,9 @@ public class ContextService: IContextService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<string> GetCurrentUserIdAsync()
+    public async Task<string?> GetCurrentUserIdAsync()
     {
-        string? userId = GetClaimValue("user_id");
+        string? userId = GetClaimValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
 
         if (userId is null)
         {
@@ -26,7 +26,7 @@ public class ContextService: IContextService
         return userId;
     }
 
-    public async Task<string> GetCurrentContextAsync()
+    public async Task<string?> GetCurrentContextAsync()
     {
         string? userEmail = GetClaimValue(ClaimTypes.Email);
 
@@ -36,28 +36,6 @@ public class ContextService: IContextService
         }
 
         return userEmail;
-    }
-
-    public async Task<string> GetCurrentGoogleFirstNameAsync()
-    {
-        string? first_name = GetClaimValue(ClaimTypes.Surname);
-        if (first_name is null)
-        {
-            return null;
-        }
-
-        return first_name;
-    }
-
-    public async Task<string> GetCurrentGoogleLastNameAsync()
-    {
-        string? last_name = GetClaimValue(ClaimTypes.GivenName);
-        if (last_name is null)
-        {
-            return null;
-        }
-
-        return last_name;
     }
 
     private string? GetClaimValue(string claim)

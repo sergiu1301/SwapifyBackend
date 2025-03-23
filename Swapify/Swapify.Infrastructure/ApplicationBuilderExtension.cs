@@ -1,14 +1,18 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Swapify.Contracts.Services;
 using Swapify.Contracts.Stores;
 using Swapify.Contracts.Transactions;
 using Swapify.Contracts.Validators;
+using Swapify.Infrastructure.Entities;
 using Swapify.Infrastructure.Options;
 using Swapify.Infrastructure.Services;
 using Swapify.Infrastructure.Stores;
 using Swapify.Infrastructure.Transactions;
 using Swapify.Infrastructure.Validators;
 using Validation;
+using UserStore = Swapify.Infrastructure.Stores.UserStore;
 
 namespace Swapify.Infrastructure;
 
@@ -31,12 +35,23 @@ public static class ApplicationBuilderExtension
         services.AddTransient<IRoleValidator, RoleValidator>();
         services.AddTransient<IContextService, ContextService>();
         services.AddTransient<IUserStore, UserStore>();
+        services.AddTransient<IClientStore, ClientStore>();
         services.AddTransient<IRoleStore, RoleStore>();
         services.AddTransient<IUserRoleStore, UserRoleStore>();
-        services.AddTransient<IUserService, UserService>();
         services.AddTransient<IRoleService, RoleService>();
         services.AddTransient<IUserRoleService, UserRoleService>();
-        services.AddSingleton<IEncryptDecryptService>(new EncryptDecryptService("2E5A3789F8B9C4D2"));
+        services.AddTransient<IEmailNotificationService, EmailNotificationService>();
+
+        services.AddIdentityCore<UserEntity>().AddRoles<RoleEntity>();
+        services.AddIdentity<UserEntity, RoleEntity>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = true;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddUserStore<UserStore<UserEntity, RoleEntity, ApplicationDbContext, string>>()
+            .AddRoleStore<RoleStore<RoleEntity, ApplicationDbContext, string>>()
+            .AddDefaultTokenProviders();
+        services.AddTransient<IUserManagerService, UserManagerService>();
 
         return services;
     }

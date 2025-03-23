@@ -15,5 +15,10 @@ public class TokenGenerationRequest
     public string Password { get; set; }
 
     [Required]
-    public string Scope { get; set; }
+    [MaxLength(100)]
+    public string ClientId { get; set; }
+
+    [Required]
+    [MaxLength(256)]
+    public string ClientSecret { get; set; }
 }
