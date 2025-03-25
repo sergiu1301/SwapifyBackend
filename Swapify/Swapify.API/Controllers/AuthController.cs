@@ -115,6 +115,7 @@ public class AuthController : Controller
         });
     }
 
+    [ApiExplorerSettings(IgnoreApi = true)]
     [HttpGet("authorize")]
     public IActionResult ShowLoginPage(
     [FromQuery] string response_type,

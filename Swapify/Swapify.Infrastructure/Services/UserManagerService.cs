@@ -200,7 +200,7 @@ public class UserManagerService : IUserManagerService
 
         IUser user = await _userStore.BlockUserAsync(userFilter, atomicScope);
 
-        await _emailNotificationService.SendUnblockAccountAsync(user.FirstName, user.LastName, user.Email);
+        await _emailNotificationService.SendBlockAccountAsync(user.FirstName, user.LastName, user.Email);
     }
 
     public async Task DeleteAsync(string userId)
