@@ -2,8 +2,7 @@
 
 public interface IAttachments
 {
-    string? FirstName { get; }
-    string? LastName { get; }
+    string UserName { get; }
     string Email { get; }
     string? RedirectUrl { get; }
     string Subject { get; }

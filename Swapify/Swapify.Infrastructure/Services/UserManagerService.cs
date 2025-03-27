@@ -87,7 +87,7 @@ public class UserManagerService : IUserManagerService
         string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         string encodedToken = HttpUtility.UrlEncode(token);
 
-        await _emailNotificationService.SendEmailConfirmationAsync(user.FirstName, user.LastName, user.Id, userEmail, encodedToken);
+        await _emailNotificationService.SendEmailConfirmationAsync(user.UserName, user.Id, userEmail, encodedToken);
     }
 
     public async Task ForgotPasswordAsync(string userEmail, string clientId, string clientSecret)
@@ -115,7 +115,7 @@ public class UserManagerService : IUserManagerService
         var token = await _userManager.GeneratePasswordResetTokenAsync(userEntity);
         var encodedToken = HttpUtility.UrlEncode(token);
 
-        await _emailNotificationService.SendForgotPasswordAsync(userEntity.FirstName, userEntity.LastName, userEntity.Id, userEmail, encodedToken);
+        await _emailNotificationService.SendForgotPasswordAsync(userEntity.UserName, userEntity.Id, userEmail, encodedToken);
     }
 
     public async Task ResetPasswordAsync(string userId, string token, string newPassword, string clientId,
@@ -141,9 +141,7 @@ public class UserManagerService : IUserManagerService
             UserId = userId
         };
 
-        string decodedToken = HttpUtility.UrlDecode(token);
-
-        await _userStore.ResetPasswordAsync(userFilter, decodedToken, newPassword, atomicScope);
+        await _userStore.ResetPasswordAsync(userFilter, token, newPassword, atomicScope);
     }
 
     public async Task ConfirmEmailAsync(string userId, string token)
@@ -200,7 +198,7 @@ public class UserManagerService : IUserManagerService
 
         IUser user = await _userStore.BlockUserAsync(userFilter, atomicScope);
 
-        await _emailNotificationService.SendBlockAccountAsync(user.FirstName, user.LastName, user.Email);
+        await _emailNotificationService.SendBlockAccountAsync(user.UserName, user.Email);
     }
 
     public async Task DeleteAsync(string userId)
@@ -267,7 +265,7 @@ public class UserManagerService : IUserManagerService
 
         IUser user = await _userStore.UnblockUserAsync(userFilter, atomicScope);
 
-        await _emailNotificationService.SendUnblockAccountAsync(user.FirstName, user.LastName, user.Email);
+        await _emailNotificationService.SendUnblockAccountAsync(user.UserName, user.Email);
 
         await atomicScope.CommitAsync();
     }

@@ -12,6 +12,8 @@ public interface IUser
 
     string? UserName { get; }
 
+    string? PhoneNumber { get; }
+
     bool LockoutEnabled { get; }
 
     DateTimeOffset? LockoutEnd { get; }

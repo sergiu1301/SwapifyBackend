@@ -1,6 +1,4 @@
-﻿using Azure.Core;
-using Swapify.Contracts.Services;
-using Swapify.Infrastructure.Models;
+﻿using Swapify.Contracts.Services;
 using Swapify.Notifications.Events;
 using Swapify.Notifications.Handlers;
 using Swapify.Notifications.Models;
@@ -20,14 +18,13 @@ public class EmailNotificationService : IEmailNotificationService
         _emailEventPublisher.EmailEvent += emailHandler.HandleEmailEvent!;
     }
 
-    public Task SendEmailConfirmationAsync(string? firstName, string? lastName, string userId, string userEmail, string encodedToken)
+    public Task SendEmailConfirmationAsync(string username, string userId, string userEmail, string encodedToken)
     {
         string confirmationLink = $"{ClientBaseUrl}/confirm-email?userId={userId}&token={encodedToken}";
 
         IAttachments emailEvent = new Attachments()
         {
-            FirstName = firstName,
-            LastName = lastName,
+            UserName = username,
             Email = userEmail,
             RedirectUrl = confirmationLink,
             Subject = "Email Confirmation"
@@ -38,14 +35,13 @@ public class EmailNotificationService : IEmailNotificationService
         return Task.CompletedTask;
     }
 
-    public Task SendForgotPasswordAsync(string? firstName, string? lastName, string userId, string userEmail, string encodedToken)
+    public Task SendForgotPasswordAsync(string username, string userId, string userEmail, string encodedToken)
     {
         string resetLink = $"{ClientBaseUrl}/reset-password?userId={userId}&token={encodedToken}";
 
         IAttachments emailEvent = new Attachments()
         {
-            FirstName = firstName,
-            LastName = lastName,
+            UserName = username,
             Email = userEmail,
             RedirectUrl = resetLink,
             Subject = "Forgot Password"
@@ -56,12 +52,11 @@ public class EmailNotificationService : IEmailNotificationService
         return Task.CompletedTask;
     }
 
-    public Task SendBlockAccountAsync(string? firstName, string? lastName, string userEmail)
+    public Task SendBlockAccountAsync(string username, string userEmail)
     {
         IAttachments emailEvent = new Attachments()
         {
-            FirstName = firstName,
-            LastName = lastName,
+            UserName = username,
             Email = userEmail,
             Subject = "Block Account"
         };
@@ -71,12 +66,11 @@ public class EmailNotificationService : IEmailNotificationService
         return Task.CompletedTask;
     }
 
-    public Task SendUnblockAccountAsync(string? firstName, string? lastName, string userEmail)
+    public Task SendUnblockAccountAsync(string username, string userEmail)
     {
         IAttachments emailEvent = new Attachments()
         {
-            FirstName = firstName,
-            LastName = lastName,
+            UserName = username,
             Email = userEmail,
             Subject = "Unblock Account"
         };

@@ -15,6 +15,7 @@ public static class UserExtensions
             FirstName = model.FirstName,
             LastName = model.LastName,
             UserName = model.UserName,
+            PhoneNumber = model.PhoneNumber,
             EmailConfirmed = model.EmailConfirmed,
             LockoutEnabled = model.LockoutEnabled,
             LockoutEnd = model.LockoutEnd,

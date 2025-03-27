@@ -107,7 +107,7 @@ public class UserStore : IUserStore
 
         if (!string.IsNullOrEmpty(query))
         {
-            queryable = queryable.Where(u => u.Id.Contains(query) || u.UserName.Contains(query) || u.Email.Contains(query));
+            queryable = queryable.Where(u => u.Email.Contains(query));
             numberUsers = await queryable.CountAsync();
         }
 
@@ -186,9 +186,7 @@ public class UserStore : IUserStore
             throw new EmailAlreadyConfirmedException();
         }
 
-        string decodedToken = HttpUtility.UrlDecode(token);
-
-        IdentityResult result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+        IdentityResult result = await _userManager.ConfirmEmailAsync(user, token);
 
         if (!result.Succeeded)
         {
@@ -214,6 +212,11 @@ public class UserStore : IUserStore
         }
 
         if (!await _userManager.CheckPasswordAsync(user, userPassword))
+        {
+            throw new UserNameOrPasswordNotFoundException();
+        }
+
+        if (user.LockoutEnd != null)
         {
             throw new UserNameOrPasswordNotFoundException();
         }

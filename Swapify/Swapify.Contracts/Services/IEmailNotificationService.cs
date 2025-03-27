@@ -4,11 +4,11 @@ namespace Swapify.Contracts.Services;
 
 public interface IEmailNotificationService
 {
-    public Task SendEmailConfirmationAsync(string? firstName, string? lastName, string userId, string userEmail, string encodedToken);
+    public Task SendEmailConfirmationAsync(string username, string userId, string userEmail, string encodedToken);
 
-    public Task SendForgotPasswordAsync(string? firstName, string? lastName, string userId, string userEmail, string encodedToken);
+    public Task SendForgotPasswordAsync(string username, string userId, string userEmail, string encodedToken);
 
-    public Task SendBlockAccountAsync(string? firstName, string? lastName, string userEmail);
+    public Task SendBlockAccountAsync(string username, string userEmail);
 
-    public Task SendUnblockAccountAsync(string? firstName, string? lastName, string userEmail);
+    public Task SendUnblockAccountAsync(string username, string userEmail);
 }

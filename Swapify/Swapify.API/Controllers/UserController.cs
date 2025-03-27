@@ -113,6 +113,7 @@ public class UserController : ApiBaseController
     /// <response code="403">Forbidden.</response>
     /// <response code="404">Not Found.</response>
     [HttpPut("reset-password")]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

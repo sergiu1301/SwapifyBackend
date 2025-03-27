@@ -27,8 +27,7 @@ public class EmailSenderService : IEmailSenderService
         string htmlBody;
         using StreamReader reader = new StreamReader(TemplateEmailPath + emailTemplate);
         htmlBody = await reader.ReadToEndAsync();
-        htmlBody = htmlBody.Replace("{FirstName}", attachments.FirstName);
-        htmlBody = htmlBody.Replace("{LastName}", attachments.LastName);
+        htmlBody = htmlBody.Replace("{UserName}", attachments.UserName);
         htmlBody = htmlBody.Replace("{CurrentYear}", DateTime.Now.Year.ToString());
         htmlBody = htmlBody.Replace("{Email}", attachments.Email);
         if (attachments.RedirectUrl != null)
