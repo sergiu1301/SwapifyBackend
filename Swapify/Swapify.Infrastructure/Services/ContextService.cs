@@ -16,7 +16,7 @@ public class ContextService: IContextService
 
     public async Task<string?> GetCurrentUserIdAsync()
     {
-        string? userId = GetClaimValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+        string? userId = GetClaimValue(ClaimTypes.NameIdentifier);
 
         if (userId is null)
         {

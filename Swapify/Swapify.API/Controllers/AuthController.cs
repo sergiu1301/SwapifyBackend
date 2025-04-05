@@ -10,6 +10,7 @@ using Swapify.API.Requests;
 using Swapify.Contracts.Models;
 using Swapify.Contracts.Services;
 using Swashbuckle.AspNetCore.Filters;
+using Newtonsoft.Json.Linq;
 
 namespace Swapify.API.Controllers;
 
@@ -88,6 +89,7 @@ public class AuthController : Controller
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Sub, user.UserId),
+            new(ClaimTypes.NameIdentifier, user.UserId),
             new(ClaimTypes.Role, user.RoleName)
         };
 
@@ -107,11 +109,40 @@ public class AuthController : Controller
         SecurityToken? securityToken = tokenHandler.CreateToken(tokenDescriptor);
         string? accessToken = tokenHandler.WriteToken(securityToken);
 
+        Response.Cookies.Append("access_token", accessToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Expires = DateTimeOffset.UtcNow.AddHours(1)
+        });
+
         return Ok(new
         {
             access_token = accessToken,
             token_type = "Bearer",
             expires_in = (int)_tokenOptions.TokenLifeTime.TotalSeconds
+        });
+    }
+
+    /// <summary>
+    /// Logout the current user by removing the access token cookie
+    /// </summary>
+    /// <response code="200">Logout successful</response>
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("access_token", new CookieOptions
+        {
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            HttpOnly = true
+        });
+
+        return Ok(new
+        {
+            message = "Successfully logged out"
         });
     }
 

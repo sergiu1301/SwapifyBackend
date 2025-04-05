@@ -252,6 +252,54 @@ public class UserManagerService : IUserManagerService
         return await _userStore.GetManyAsync(pageNumber, pageSize, atomicScope, query);
     }
 
+    public async Task UpdateUserAsync(string userId, string? requestFirstName, string? requestLastName, string? requestPhoneNumber,
+        string? requestUserName)
+    {
+        Requires.NotNullOrEmpty(userId, nameof(userId));
+
+        UserEntity? userEntity = await _userManager.FindByIdAsync(userId);
+
+        if (userEntity == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        bool hasChanges = false;
+
+        if (!string.IsNullOrWhiteSpace(requestFirstName) && requestFirstName != userEntity.FirstName)
+        {
+            userEntity.FirstName = requestFirstName;
+            hasChanges = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(requestLastName) && requestLastName != userEntity.LastName)
+        {
+            userEntity.LastName = requestLastName;
+            hasChanges = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(requestPhoneNumber) && requestPhoneNumber != userEntity.PhoneNumber)
+        {
+            userEntity.PhoneNumber = requestPhoneNumber;
+            hasChanges = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(requestUserName) && requestUserName != userEntity.UserName)
+        {
+            userEntity.UserName = requestUserName;
+            hasChanges = true;
+        }
+
+        if (hasChanges)
+        {
+            IdentityResult result = await _userManager.UpdateAsync(userEntity);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException("Failed to update user.");
+            }
+        }
+    }
+
     public async Task UnblockAsync(string userId)
     {
         Requires.NotNullOrEmpty(userId, nameof(userId));

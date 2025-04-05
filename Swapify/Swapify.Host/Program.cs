@@ -13,6 +13,8 @@ using Swapify.Host.Settings;
 using Microsoft.Extensions.Options;
 using Swapify.Host.Swaggers;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Swapify.API.Controllers;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -26,6 +28,7 @@ var swapifySettings = sp.GetRequiredService<IOptions<SwapifySettings>>().Value;
 var connectionStrings = sp.GetRequiredService<IOptions<ConnectionStrings>>().Value;
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication(configOption =>
 {
@@ -42,9 +45,34 @@ builder.Services.AddAuthentication(configOption =>
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
-        ValidateIssuerSigningKey = true
+        ValidateIssuerSigningKey = true,
+        NameClaimType = JwtRegisteredClaimNames.Sub,
+    };
+
+    jwtBearerOption.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hub/status"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
+
+builder.Services.AddAuthentication("MyCookieScheme")
+    .AddCookie("MyCookieScheme", options =>
+    {
+        options.Cookie.Name = "Swapify";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
+
 builder.Services.AddDbContext<ApplicationDbContext>(
     optionsBuilder => optionsBuilder.UseSqlServer(connectionStrings.DefaultConnection)
         .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
@@ -58,7 +86,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddLogging();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
+/*builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
     builder =>
     {
         builder.AllowAnyHeader()
@@ -66,6 +94,17 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
             .SetIsOriginAllowed((host) => true)
             .AllowCredentials();
     }));
+*/
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowCredentials()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 builder.Services.AddApiVersioning(o => {
     o.ReportApiVersions = true;
     o.AssumeDefaultVersionWhenUnspecified = true;
@@ -84,6 +123,8 @@ var app = builder.Build();
 app.UseStaticFiles();
 app.UseMiddleware<ForwardedPrefixHeaderMiddleware>();
 
+app.UseRouting();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -94,7 +135,6 @@ if (app.Environment.IsDevelopment())
         c.OAuthClientSecret("");
         c.OAuthUsePkce();
     });
-    app.UseRouting();
 }
 
 app.UseHttpsRedirection();
@@ -102,6 +142,8 @@ app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+app.MapHub<StatusHub>("/hub/status");
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();

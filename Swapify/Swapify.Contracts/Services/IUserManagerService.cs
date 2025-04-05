@@ -15,5 +15,5 @@ public interface IUserManagerService
     Task<IUser> GetByEmailAsync(string userEmail);
     Task<IUser> GetByIdAsync(string userId);
     Task<(int, IReadOnlyList<IUser>)> GetManyAsync(int pageNumber, int pageSize, string? query = null);
-
+    Task UpdateUserAsync(string userId, string? requestFirstName, string? requestLastName, string? requestPhoneNumber, string? requestUserName);
 }

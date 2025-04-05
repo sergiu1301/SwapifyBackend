@@ -75,7 +75,8 @@ public class UserController : ApiBaseController
     public async Task<IActionResult> DeleteUserAsync()
     {
         string userId = await _contextService.GetCurrentUserIdAsync();
-        await _userManagerService.DeleteAsync(userId);
+
+        await _userManagerService.DeleteAsync(userId!);
 
         return NoContent();
     }
@@ -145,6 +146,26 @@ public class UserController : ApiBaseController
     public async Task<IActionResult> ConfirmEmailAsync([FromQuery] string userId, [FromQuery] string token)
     {
         await _userManagerService.ConfirmEmailAsync(userId, token);
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Update user profile
+    /// </summary>
+    /// <param name="request">Update request</param>
+    /// <response code="204">User updated</response>
+    /// <response code="400">Invalid input</response>
+    /// <response code="401">Unauthorized</response>
+    [HttpPatch]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> PatchUserAsync([FromBody] UpdateUserRequest request)
+    {
+        var userId = await _contextService.GetCurrentUserIdAsync();
+
+        await _userManagerService.UpdateUserAsync(userId!, request.FirstName, request.LastName, request.PhoneNumber, request.UserName);
 
         return NoContent();
     }
